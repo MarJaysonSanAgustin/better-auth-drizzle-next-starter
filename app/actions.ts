@@ -1,4 +1,5 @@
 'use server'
+import { redirect, RedirectType } from "next/navigation";
 import { auth } from "./lib/auth";
 
 export async function signup(formData: FormData) {
@@ -20,16 +21,17 @@ export async function signup(formData: FormData) {
   }
 
   try {
-    const data = await auth.api.signUpEmail({
+    await auth.api.signUpEmail({
       body: {
-        name: name,
-        email: email,
-        password: password,
-      }
-    });
-    console.log(data)
+        name,
+        email,
+        password
+      },
+    })
   } catch (error) {
-    console.log(error)
+    console.error(error)
+  } finally {
+    redirect("/signin", RedirectType.replace)
   }
 }
 
@@ -48,13 +50,14 @@ export async function signin(formData: FormData) {
   try {
     const data = await auth.api.signInEmail({
       body: {
-        email: email,
-        password: password,
-        callbackURL: "/"
-      }
-    });
+        email,
+        password,
+      },
+    })
     console.log(data)
   } catch (error) {
-    console.log(error)
+    console.log("Error signing in:", error)
+  } finally {
+    redirect("/", RedirectType.replace)
   }
 }
