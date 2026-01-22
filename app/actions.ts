@@ -48,15 +48,14 @@ export async function signin(formData: FormData) {
   }
 
   try {
-    const data = await auth.api.signInEmail({
+    await auth.api.signInEmail({
       body: {
         email,
         password,
       },
     })
-    console.log(data)
   } catch (error) {
-    console.log("Error signing in:", error)
+    console.error("Error signing in:", error)
   } finally {
     redirect("/", RedirectType.replace)
   }
